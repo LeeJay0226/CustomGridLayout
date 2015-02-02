@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/black">
+
+    <com.leejay.customgridlayout.GridLayout
+        android:id="@+id/gridlayout"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:background="@android:color/white"
+        app:gridlayout_columns="3"
+        app:gridlayout_rows="2"
+        app:gridlayout_gaps="3dp" />
+
+    <com.leejay.customgridlayout.GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:layout_marginTop="30dp"
+        android:padding="10dp"
+        android:background="@android:color/white"
+        app:gridlayout_columns="3"
+        app:gridlayout_rows="2"
+        app:gridlayout_gaps="1dp"
+        app:gridlayout_orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/img1"
+            android:scaleType="centerCrop"
+            app:gridItem_rowSpan="1"
+            app:gridItem_colSpan="1" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/img2"
+            android:scaleType="centerCrop"
+            app:gridItem_rowSpan="1"
+            app:gridItem_colSpan="1" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/img3"
+            android:scaleType="centerCrop"
+            app:gridItem_rowSpan="2"
+            app:gridItem_colSpan="2" />
+    </com.leejay.customgridlayout.GridLayout>
+</LinearLayout>

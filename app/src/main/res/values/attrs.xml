@@ -1,0 +1,13 @@
+<resources>
+    <declare-styleable name="GridLayout">
+        <attr name="gridlayout_columns" format="integer" />
+        <attr name="gridlayout_rows" format="integer" />
+        <attr name="gridlayout_gaps" format="dimension" />
+        <attr name="gridlayout_orientation" format="enum">
+            <enum name="horizontal" value="0" />
+            <enum name="vertical" value="1" />
+        </attr>
+        <attr name="gridItem_rowSpan" format="integer" />
+        <attr name="gridItem_colSpan" format="integer" />
+    </declare-styleable>
+</resources>
