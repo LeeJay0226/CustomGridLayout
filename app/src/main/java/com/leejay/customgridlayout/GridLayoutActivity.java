@@ -29,7 +29,7 @@ public class GridLayoutActivity extends ActionBarActivity {
 
 
         ImageView imageView3 = new ImageView(this);
-        imageView3.setImageResource(R.drawable.img3);
+        imageView3.setImageResource(R.drawable.img4);
         imageView3.setScaleType(ImageView.ScaleType.CENTER_CROP);
         GridLayout.GridLayoutParams params3 = new GridLayout.GridLayoutParams(1, 1);
         gridLayout.addView(imageView3, params3);

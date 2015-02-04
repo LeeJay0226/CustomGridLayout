@@ -2,6 +2,8 @@ package com.leejay.customgridlayout;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
 import android.util.AttributeSet;
 import android.view.View;
@@ -21,7 +23,8 @@ public class GridLayout extends ViewGroup {
     private int mGaps = 0;
     private int mColumns = 1;
     private int mRows = 1;
-    private boolean[][] mFlags;
+    private int[][] mFlags;
+    private Drawable mDivider;
 
     @IntDef({HORIZONTAL, VERTICAL})
     @Retention(RetentionPolicy.SOURCE)
@@ -54,9 +57,10 @@ public class GridLayout extends ViewGroup {
             if (1 > mRows) {
                 mRows = 1;
             }
-            mFlags = new boolean[mRows][mColumns];
+            mFlags = new int[mRows][mColumns];
             mGaps = a.getDimensionPixelSize(R.styleable.GridLayout_gridlayout_gaps, mGaps);
             mOrientation = a.getInt(R.styleable.GridLayout_gridlayout_orientation, HORIZONTAL);
+            mDivider = a.getDrawable(R.styleable.GridLayout_gridlayout_divider);
             a.recycle();
         }
     }
@@ -88,17 +92,17 @@ public class GridLayout extends ViewGroup {
             return;
         }
         int count = getChildCount();
-        for (boolean[] mFlag : mFlags) {
-            Arrays.fill(mFlag, false);
+        for (int[] mFlag : mFlags) {
+            Arrays.fill(mFlag, 0);
         }
 
         r -= (getPaddingRight() + l);
         b -= (getPaddingBottom() + t);
         l = getPaddingLeft();
         t = getPaddingTop();
-        final int avgWidth = (r - l - mGaps * (mColumns - 1)) / mColumns;
-        final int avgHeight = (b - t - mGaps * (mRows - 1)) / mRows;
         final int gaps = mGaps;
+        final int avgWidth = (r - l - gaps * (mColumns - 1)) / mColumns;
+        final int avgHeight = (b - t - gaps * (mRows - 1)) / mRows;
         for (int i = 0; i < count; i++) {
             View child = getChildAt(i);
             if (child.getVisibility() != GONE) {
@@ -118,18 +122,81 @@ public class GridLayout extends ViewGroup {
                         bottom = b;
                     }
                     child.layout(left, top, right, bottom);
-                    fillFlags(pos, rowSpan, colSpan);
+                    fillFlags(pos, rowSpan, colSpan, i + 1);
                 }
             }
         }
     }
 
-    private void fillFlags(Position pos, int rowSpan, int colSpan) {
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
+        super.dispatchDraw(canvas);
+        if (null == mDivider) {
+            return;
+        }
+        final int rows = mRows;
+        final int cols = mColumns;
+        final int[][] flags = mFlags;
+        final int gaps = mGaps;
+        final int paddingTop = getPaddingTop();
+        final int paddingLeft = getPaddingLeft();
+        final int paddingRight = getPaddingRight();
+        final int paddingBottom = getPaddingBottom();
+        final int avgWidth = (getMeasuredWidth() - paddingLeft - paddingRight - gaps * (mColumns - 1)) / mColumns;
+        final int avgHeight = (getMeasuredHeight() - paddingTop - paddingBottom - gaps * (mRows - 1)) / mRows;
+        final int[][] fillTags = new int[rows][cols];
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                int top, left, right, bottom;
+
+                //先画竖线
+                if (c < cols - 1 && (fillTags[r][c] & 1) == 0) {
+                    int i = r;
+                    for (; i < rows; i++) {
+                        if (flags[i][c] == flags[i][c + 1]) {
+                            break;
+                        } else {
+                            fillTags[i][c] |= 1;
+                        }
+                    }
+                    if (i != r) {
+                        top = paddingTop + (avgHeight + gaps) * r;
+                        left = paddingLeft + (avgWidth + gaps) * (c + 1) - gaps;
+                        bottom = top + (i - r) * (avgHeight + gaps) - gaps;
+                        right = left + gaps;
+                        mDivider.setBounds(left, top, right, bottom);
+                        mDivider.draw(canvas);
+                    }
+                }
+                //后画横线
+                if (r < rows - 1 && (fillTags[r][c] & 2) == 0) {
+                    int i = c;
+                    for (; i < cols; i++) {
+                        if (flags[r][i] == flags[r + 1][i]) {
+                            break;
+                        } else {
+                            fillTags[r][i] |= 2;
+                        }
+                    }
+                    if (i != c) {
+                        top = paddingTop + (avgHeight + gaps) * (r + 1) - gaps;
+                        left = paddingLeft + (avgWidth + gaps) * c;
+                        bottom = top + gaps;
+                        right = left + (i - c) * (avgWidth + gaps) - gaps;
+                        mDivider.setBounds(left, top, right, bottom);
+                        mDivider.draw(canvas);
+                    }
+                }
+            }
+        }
+    }
+
+    private void fillFlags(Position pos, int rowSpan, int colSpan, int index) {
         int rowIndex = pos.rowIndex;
         int colIndex = pos.colIndex;
         for (int r = 0; r < rowSpan; r++) {
             for (int c = 0; c < colSpan; c++) {
-                mFlags[rowIndex + r][colIndex + c] = true;
+                mFlags[rowIndex + r][colIndex + c] = index;
             }
         }
     }
@@ -137,15 +204,15 @@ public class GridLayout extends ViewGroup {
     private Position findPosition(int rowSpan, int colSpan) {
         final int rows = mRows;
         final int cols = mColumns;
-        final boolean[][] flags = mFlags;
+        final int[][] flags = mFlags;
         if (mOrientation == HORIZONTAL) {
             for (int r = 0; r < rows; r++) {
                 for (int c = 0; c < cols; c++) {
-                    if (!flags[r][c]) {
+                    if (0 == flags[r][c]) {
                         boolean b = true;
                         for (int ri = 0; ri < rowSpan; ri++) {
                             for (int cj = 0; cj < colSpan; cj++) {
-                                if (r + ri >= rows || c + cj >= cols || flags[r + ri][c + cj]) {
+                                if (r + ri >= rows || c + cj >= cols || 0 != flags[r + ri][c + cj]) {
                                     b = false;
                                     break;
                                 }
@@ -160,11 +227,11 @@ public class GridLayout extends ViewGroup {
         } else {
             for (int c = 0; c < cols; c++) {
                 for (int r = 0; r < rows; r++) {
-                    if (!flags[r][c]) {
+                    if (0 == flags[r][c]) {
                         boolean b = true;
                         for (int ri = 0; ri < rowSpan; ri++) {
                             for (int cj = 0; cj < colSpan; cj++) {
-                                if (r + ri >= rows || c + cj >= cols || flags[r + ri][c + cj]) {
+                                if (r + ri >= rows || c + cj >= cols || 0 != flags[r + ri][c + cj]) {
                                     b = false;
                                     break;
                                 }
@@ -204,32 +271,52 @@ public class GridLayout extends ViewGroup {
         }
     }
 
-    public int getmOrientation() {
+    public int getOrientation() {
         return mOrientation;
     }
 
-    public int getmGaps() {
+    public int getGaps() {
         return mGaps;
     }
 
-    public void setmGaps(int mGaps) {
-        this.mGaps = mGaps;
+    public void setGaps(int gaps) {
+        if (this.mGaps != gaps) {
+            this.mGaps = gaps;
+            requestLayout();
+        }
     }
 
-    public int getmColumns() {
+    public int getColumns() {
         return mColumns;
     }
 
-    public void setmColumns(int mColumns) {
-        this.mColumns = mColumns;
+    public void setColumns(int columns) {
+        if (this.mColumns != columns) {
+            this.mColumns = columns;
+            requestLayout();
+        }
     }
 
-    public int getmRows() {
+    public int getRows() {
         return mRows;
     }
 
-    public void setmRows(int mRows) {
-        this.mRows = mRows;
+    public void setRows(int rows) {
+        if (this.mRows != rows) {
+            this.mRows = rows;
+            requestLayout();
+        }
+    }
+
+    public Drawable getDivider() {
+        return mDivider;
+    }
+
+    public void setDivider(Drawable divider) {
+        if (this.mDivider != divider) {
+            this.mDivider = divider;
+            requestLayout();
+        }
     }
 
     @Override

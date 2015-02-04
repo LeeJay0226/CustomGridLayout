@@ -14,7 +14,8 @@
         android:background="@android:color/white"
         app:gridlayout_columns="3"
         app:gridlayout_rows="2"
-        app:gridlayout_gaps="3dp" />
+        app:gridlayout_gaps="3dp"
+        app:gridlayout_divider="@android:color/darker_gray" />
 
     <com.leejay.customgridlayout.GridLayout
         android:layout_width="match_parent"
@@ -23,9 +24,10 @@
         android:padding="10dp"
         android:background="@android:color/white"
         app:gridlayout_columns="3"
-        app:gridlayout_rows="2"
-        app:gridlayout_gaps="1dp"
-        app:gridlayout_orientation="vertical">
+        app:gridlayout_rows="3"
+        app:gridlayout_gaps="3dp"
+        app:gridlayout_orientation="vertical"
+        app:gridlayout_divider="@android:color/darker_gray">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -41,14 +43,38 @@
             android:src="@drawable/img2"
             android:scaleType="centerCrop"
             app:gridItem_rowSpan="1"
+            app:gridItem_colSpan="2" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/img4"
+            android:scaleType="centerCrop"
+            app:gridItem_rowSpan="1"
             app:gridItem_colSpan="1" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/img3"
+            android:src="@drawable/img1"
+            android:scaleType="centerCrop"
+            app:gridItem_rowSpan="1"
+            app:gridItem_colSpan="2" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/img2"
+            android:scaleType="centerCrop"
+            app:gridItem_rowSpan="1"
+            app:gridItem_colSpan="1" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/img4"
             android:scaleType="centerCrop"
             app:gridItem_rowSpan="2"
-            app:gridItem_colSpan="2" />
+            app:gridItem_colSpan="1" />
     </com.leejay.customgridlayout.GridLayout>
 </LinearLayout>
