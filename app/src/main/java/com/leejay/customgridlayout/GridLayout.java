@@ -62,6 +62,27 @@ public class GridLayout extends ViewGroup {
     }
 
     @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        final int totalWidth = MeasureSpec.getSize(widthMeasureSpec);
+        final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int totalHeight = 0;
+        switch (heightMode) {
+            case MeasureSpec.UNSPECIFIED:
+            case MeasureSpec.AT_MOST:
+                final int avgWidth = (totalWidth - getPaddingLeft() - getPaddingRight() - mGaps * (mColumns - 1)) / mColumns;
+                totalHeight = getPaddingTop() + getPaddingBottom() + (avgWidth + mGaps) * mRows - mGaps;
+                if (MeasureSpec.AT_MOST == heightMode) {
+                    totalHeight = Math.min(totalHeight, MeasureSpec.getSize(heightMeasureSpec));
+                }
+                break;
+            case MeasureSpec.EXACTLY:
+                totalHeight = MeasureSpec.getSize(heightMeasureSpec);
+                break;
+        }
+        setMeasuredDimension(totalWidth, totalHeight);
+    }
+
+    @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         if (!changed) {
             return;
@@ -209,11 +230,6 @@ public class GridLayout extends ViewGroup {
 
     public void setmRows(int mRows) {
         this.mRows = mRows;
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec));
     }
 
     @Override
