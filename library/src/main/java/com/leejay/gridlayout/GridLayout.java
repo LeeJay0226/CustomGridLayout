@@ -1,4 +1,4 @@
-package com.leejay.customgridlayout;
+package com.leejay.gridlayout;
 
 import android.content.Context;
 import android.content.res.TypedArray;
