@@ -1,10 +1,10 @@
-package com.leejay.gridlayout.sample;
+package com.github.leejay.customgridlayout.sample;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.ImageView;
 
-import com.leejay.gridlayout.GridLayout;
+import com.github.leejay.customgridlayout.GridLayout;
 
 /**
  * Created by leejay on 15/02/02.
