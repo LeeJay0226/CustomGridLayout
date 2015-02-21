@@ -1,14 +1,15 @@
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
 
     defaultConfig {
+        applicationId "com.leejay.customgridlayout"
         minSdkVersion 14
         targetSdkVersion 19
         versionCode 1
-        versionName "1.0.2"
+        versionName "1.0.0"
     }
     buildTypes {
         release {
@@ -17,10 +18,11 @@ android {
         }
     }
 }
-
+repositories {
+    mavenCentral()
+}
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.github.leejay.customgridlayout:library:1.0.2'
 }
-
-apply from: '../maven_push.gradle'
