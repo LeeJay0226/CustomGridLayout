@@ -1,10 +1,10 @@
 package com.github.leejay.customgridlayout.sample;
 
+import com.github.leejay.customgridlayout.GridLayout;
+
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.ImageView;
-
-import com.github.leejay.customgridlayout.GridLayout;
 
 /**
  * Created by leejay on 15/02/02.
@@ -31,13 +31,13 @@ public class GridLayoutActivity extends ActionBarActivity {
 
 
         ImageView imageView3 = new ImageView(this);
-        imageView3.setImageResource(R.drawable.img4);
+        imageView3.setImageResource(R.drawable.img3);
         imageView3.setScaleType(ImageView.ScaleType.CENTER_CROP);
         GridLayout.GridLayoutParams params3 = new GridLayout.GridLayoutParams(1, 1);
         gridLayout.addView(imageView3, params3);
 
         ImageView imageView4 = new ImageView(this);
-        imageView4.setImageResource(R.drawable.img4);
+        imageView4.setImageResource(R.drawable.img3);
         imageView4.setScaleType(ImageView.ScaleType.CENTER_CROP);
         GridLayout.GridLayoutParams params4 = new GridLayout.GridLayoutParams(1, 1);
         gridLayout.addView(imageView4, params4);

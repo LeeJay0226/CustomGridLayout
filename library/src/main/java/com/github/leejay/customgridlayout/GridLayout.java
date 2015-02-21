@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,21 +21,21 @@ import java.util.Arrays;
 
 public class GridLayout extends ViewGroup {
 
+    public static final int HORIZONTAL = 0;
+
+    public static final int VERTICAL = 1;
+
     private int mGaps = 0;
+
     private int mColumns = 1;
+
     private int mRows = 1;
+
     private int[][] mFlags;
+
     private Drawable mDivider;
 
-    @IntDef({HORIZONTAL, VERTICAL})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface OrientationMode {
-
-    }
-
     private int mOrientation;
-    public static final int HORIZONTAL = 0;
-    public static final int VERTICAL = 1;
 
 
     public GridLayout(Context context) {
@@ -129,7 +130,7 @@ public class GridLayout extends ViewGroup {
     }
 
     @Override
-    protected void dispatchDraw(Canvas canvas) {
+    protected void dispatchDraw(@NonNull Canvas canvas) {
         super.dispatchDraw(canvas);
         if (null == mDivider) {
             return;
@@ -247,14 +248,8 @@ public class GridLayout extends ViewGroup {
         return null;
     }
 
-    class Position {
-        int rowIndex;
-        int colIndex;
-
-        Position(int rowIndex, int colIndex) {
-            this.colIndex = colIndex;
-            this.rowIndex = rowIndex;
-        }
+    public int getOrientation() {
+        return mOrientation;
     }
 
     /**
@@ -269,10 +264,6 @@ public class GridLayout extends ViewGroup {
             mOrientation = orientation;
             requestLayout();
         }
-    }
-
-    public int getOrientation() {
-        return mOrientation;
     }
 
     public int getGaps() {
@@ -334,6 +325,12 @@ public class GridLayout extends ViewGroup {
         return new GridLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     }
 
+    @IntDef({HORIZONTAL, VERTICAL})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface OrientationMode {
+
+    }
+
     public static class GridLayoutParams extends ViewGroup.LayoutParams {
         public int rowSpan = 1;
         public int colSpan = 1;
@@ -356,6 +353,16 @@ public class GridLayout extends ViewGroup {
             super(0, 0);
             this.rowSpan = rowSpan;
             this.colSpan = colSpan;
+        }
+    }
+
+    class Position {
+        final int rowIndex;
+        final int colIndex;
+
+        Position(int rowIndex, int colIndex) {
+            this.colIndex = colIndex;
+            this.rowIndex = rowIndex;
         }
     }
 }

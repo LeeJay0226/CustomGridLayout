@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@android:color/black">
+    android:orientation="vertical">
 
     <com.github.leejay.customgridlayout.GridLayout
         android:id="@+id/gridlayout"
@@ -48,7 +47,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/img4"
+            android:src="@drawable/img3"
             android:scaleType="centerCrop"
             app:gridItem_rowSpan="1"
             app:gridItem_colSpan="1" />
@@ -72,7 +71,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/img4"
+            android:src="@drawable/img3"
             android:scaleType="centerCrop"
             app:gridItem_rowSpan="2"
             app:gridItem_colSpan="1" />
